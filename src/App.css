@@ -1,0 +1,21 @@
+.app-container {
+    display: flex;
+    height: 100vh; /* Full screen height */
+  }
+  
+  .sidebar {
+    width: 250px; /* Fixed width for sidebar */
+    background-color: #f8f9fa; /* Light background */
+    padding: 20px;
+    position: fixed;
+    height: 100vh; /* Full height */
+    overflow-y: auto; /* Scroll if needed */
+  }
+  
+  .main-content {
+    margin-left: 250px; /* Push content to the right of the sidebar */
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
