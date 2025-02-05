@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import axiosInstance from "../../services/axiosInstance";
 
-const EditExpense = ({ categories = [], getExpenseById, updateExpense, deleteExpense }) => {
+const EditExpense = () => {
   const { id } = useParams(); // Get the expense ID from URL
   const navigate = useNavigate();
 
@@ -10,24 +11,41 @@ const EditExpense = ({ categories = [], getExpenseById, updateExpense, deleteExp
     amount: "",
     description: "",
     category: "",
-    expense_date: "",
+    date: "",
   });
+  const [categories, setCategories] = useState([]);
+
+  // Fetch categories from backend
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const response = await axiosInstance.get("/expense/categories/");
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    loadCategories();
+  }, []);
 
   // Fetch expense details when component mounts
   useEffect(() => {
     const fetchExpense = async () => {
-      const expense = await getExpenseById(id);
-      if (expense) {
+      try {
+        const response = await axiosInstance.get(`/expense/expenses/${id}/`);
+        const expense = response.data;
         setFormData({
-          amount: expense.amount || "",
-          description: expense.description || "",
-          category: expense.category || "",
-          expense_date: expense.expense_date ? expense.expense_date.split("T")[0] : "",
+          amount: expense.amount,
+          description: expense.description,
+          category: expense.category,
+          date: expense.date,
         });
+      } catch (error) {
+        console.error("Error fetching expense:", error);
       }
     };
     fetchExpense();
-  }, [id, getExpenseById]);
+  }, [id]);
 
   // Handle input change
   const handleChange = (e) => {
@@ -37,35 +55,35 @@ const EditExpense = ({ categories = [], getExpenseById, updateExpense, deleteExp
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await updateExpense(id, formData);
-    navigate("/expenses"); // Redirect after successful update
+    try {
+      await axiosInstance.put(`/expense/expenses/${id}/`, formData);
+      alert("Expense updated successfully!");
+      navigate("/expenses"); // Redirect after successful update
+    } catch (error) {
+      console.error("Error updating expense:", error);
+      alert("Failed to update expense");
+    }
   };
 
   return (
     <div className="container mt-4">
-      {/* Breadcrumb Navigation */}
-      <div className="row">
-        <div className="col-md-12">
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb bg-light p-3 rounded">
-              <li className="breadcrumb-item">
-                <a href="/expenses">Expenses</a>
-              </li>
-              <li className="breadcrumb-item active" aria-current="page">
-                Edit Expense
-              </li>
-            </ol>
-          </nav>
-        </div>
-      </div>
+      <nav aria-label="breadcrumb">
+        <ol className="breadcrumb bg-light p-3 rounded">
+          <li className="breadcrumb-item">
+            <a href="/expenses">Expenses</a>
+          </li>
+          <li className="breadcrumb-item active" aria-current="page">
+            Edit Expense
+          </li>
+        </ol>
+      </nav>
 
-      {/* Edit Expense Form */}
       <div className="row justify-content-center">
         <div className="col-md-6">
           <div className="card shadow-sm">
             <div className="card-body">
+              <h4 className="mb-3 text-center">Edit Expense</h4>
               <form onSubmit={handleSubmit}>
-                {/* Amount Input */}
                 <div className="mb-3">
                   <label className="form-label">Amount</label>
                   <input
@@ -78,11 +96,9 @@ const EditExpense = ({ categories = [], getExpenseById, updateExpense, deleteExp
                   />
                 </div>
 
-                {/* Description Input */}
                 <div className="mb-3">
                   <label className="form-label">Description</label>
-                  <input
-                    type="text"
+                  <textarea
                     className="form-control"
                     name="description"
                     value={formData.description}
@@ -91,7 +107,6 @@ const EditExpense = ({ categories = [], getExpenseById, updateExpense, deleteExp
                   />
                 </div>
 
-                {/* Category Dropdown */}
                 <div className="mb-3">
                   <label className="form-label">Category</label>
                   <select
@@ -102,28 +117,26 @@ const EditExpense = ({ categories = [], getExpenseById, updateExpense, deleteExp
                     required
                   >
                     <option value="">Select a category</option>
-                    {categories.map((category, index) => (
-                      <option key={index} value={category.name}>
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.id}>
                         {category.name}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                {/* Date Picker */}
                 <div className="mb-3">
                   <label className="form-label">Date of Expense</label>
                   <input
                     type="date"
                     className="form-control"
-                    name="expense_date"
-                    value={formData.expense_date}
+                    name="date"
+                    value={formData.date}
                     onChange={handleChange}
                     required
                   />
                 </div>
 
-                {/* Save Button */}
                 <div className="text-center">
                   <button type="submit" className="btn btn-primary w-100">
                     Save Changes

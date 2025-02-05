@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../services/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 const AddExpense = () => {
   const [formData, setFormData] = useState({
@@ -8,7 +9,7 @@ const AddExpense = () => {
     category: "",
     date: "",
   });
-
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
 
   // ✅ Fetch categories from backend
@@ -37,6 +38,7 @@ const AddExpense = () => {
     try {
         const response = await axiosInstance.post("/expense/expenses/", formData);
         alert("Expense added successfully!");
+        navigate("/expenses");
         setFormData({ amount: "", description: "", category: "", date: "" });
     } catch (error) {
         console.error("Error adding expense:", error.response?.data || error.message);
@@ -60,13 +62,13 @@ const AddExpense = () => {
               <h4 className="mb-3 text-center">Add New Expense</h4>
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label className="form-label">Amount</label>
-                  <input type="number" className="form-control" name="amount" value={formData.amount} onChange={handleChange} required />
+                  <label className="form-label" >Amount</label>
+                  <input type="number" placeholder="Enter Amount" className="form-control" name="amount" value={formData.amount} onChange={handleChange} required />
                 </div>
 
                 <div className="mb-3">
                   <label className="form-label">Description</label>
-                  <textarea className="form-control" name="description" value={formData.description} onChange={handleChange} required />
+                  <textarea className="form-control" placeholder="Enter Description" name="description" value={formData.description} onChange={handleChange} required />
                 </div>
 
                 <div className="mb-3">

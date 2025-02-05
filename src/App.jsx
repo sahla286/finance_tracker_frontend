@@ -14,12 +14,15 @@ import EditExpense from "./Components/Expenses/EditExpense";
 import Layout from "./Components/Sidebar/Layout";
 import Dashboard from "./Components/Sidebar/Dashboard";
 import { useEffect, useState } from "react";
+import IncomeChart from "./Components/Income/IncomeChart";
+import IncomeSummary from "./Components/Income/IncomeSummary";
+import ExpenseStats from "./Components/Expenses/ExpenseStats";
 
 function App() {
   const [sources, setSources] = useState([]);
 
   useEffect(() => {
-    fetch("/income/income-sources") // Adjust API endpoint
+    fetch("/income/sources") // Adjust API endpoint
       .then((res) => res.json())
       .then((data) => setSources(data.sources))
       .catch((err) => console.error("Error fetching sources:", err));
@@ -60,10 +63,15 @@ function App() {
               <EditIncome sources={sources} fetchIncomeById={fetchIncomeById} />
             }
           />
+          <Route path="/income-chart" element={<IncomeChart />} />
+          {/* <Route path="/income-chart" element={<IncomeSummary />} /> */}
+
+
 
           <Route path="/expenses" element={<ExpenseList />} />
           <Route path="/expenses/add" element={<AddExpense/>} />
           <Route path="/expenses/edit/:id" element={<EditExpense/>} />
+          <Route path="/expenses-chart" element={<ExpenseStats />} />
         </Routes>
       </div>
     </div>

@@ -1,53 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import axiosInstance from "../../services/axiosInstance";
 
 const IncomeList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [incomes, setIncomes] = useState([]);
   const [filteredIncomes, setFilteredIncomes] = useState([]);
-  const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1 });
   const currency = "INR";
-  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("/api/income") // Update with your actual API endpoint
-      .then((res) => res.json())
-      .then((data) => {
-        setIncomes(data.results);
-        setPagination({ currentPage: data.current_page, totalPages: data.total_pages });
-      });
+    fetchIncomes();
   }, []);
 
+  const fetchIncomes = async () => {
+    try {
+      const response = await axiosInstance.get("/income/income/");
+      setIncomes(response.data);
+    } catch (error) {
+      console.error("Error fetching incomes:", error);
+    }
+  };
+
   const handleSearch = (e) => {
-    const value = e.target.value;
+    const value = e.target.value.toLowerCase();
     setSearchTerm(value);
 
     if (value.trim().length > 0) {
-      fetch("/income/search-income", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ searchText: value }),
-      })
-        .then((res) => res.json())
-        .then((data) => setFilteredIncomes(data));
+      const results = incomes.filter(
+        (income) =>
+          income.description.toLowerCase().includes(value) ||
+          income.source_name.toLowerCase().includes(value)
+      );
+      setFilteredIncomes(results);
     } else {
       setFilteredIncomes([]);
     }
   };
 
-  // ✅ Updated handleDelete function
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this income record?")) {
+    if (window.confirm("Are you sure you want to delete this income?")) {
       try {
-        const response = await fetch(`/api/income/${id}`, {
-          method: "DELETE",
-        });
-
-        if (response.ok) {
-          setIncomes((prevIncomes) => prevIncomes.filter((income) => income.id !== id));
-        } else {
-          console.error("Failed to delete income record");
-        }
+        await axiosInstance.delete(`/income/income/${id}/`);
+        setIncomes(incomes.filter((income) => income.id !== id));
       } catch (error) {
         console.error("Error deleting income:", error);
       }
@@ -72,9 +66,7 @@ const IncomeList = () => {
           </nav>
         </div>
         <div className="col-md-2">
-          <Link to="/income/add" className="btn btn-primary">
-            Add Income
-          </Link>
+          <Link to="/income/add" className="btn btn-primary">Add Income</Link>
         </div>
       </div>
 
@@ -82,7 +74,7 @@ const IncomeList = () => {
         <input
           type="text"
           className="form-control"
-          placeholder="Search"
+          placeholder="Search by description or source"
           value={searchTerm}
           onChange={handleSearch}
         />
@@ -103,52 +95,22 @@ const IncomeList = () => {
             displayedIncomes.map((income) => (
               <tr key={income.id}>
                 <td>{income.amount}</td>
-                <td>{income.source}</td>
+                <td>{income.source_name}</td>
                 <td>{income.description}</td>
                 <td>{income.date}</td>
                 <td>
-                  <Link to={`/income/edit/${income.id}`} className="btn btn-secondary btn-sm me-2">
-                    Edit
-                  </Link>
-                  <button className="btn btn-danger btn-sm" onClick={() => handleDelete(income.id)}>
-                    Delete
-                  </button>
+                  <Link to={`/income/edit/${income.id}`} className="btn btn-secondary btn-sm me-2">Edit</Link>
+                  <button className="btn btn-danger btn-sm" onClick={() => handleDelete(income.id)}>Delete</button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="5" className="text-center">
-                No results found
-              </td>
+              <td colSpan="5" className="text-center">No results found</td>
             </tr>
           )}
         </tbody>
       </table>
-
-      {searchTerm === "" && (
-        <div className="pagination-container">
-          <p>
-            Showing page {pagination.currentPage} of {pagination.totalPages}
-          </p>
-          <ul className="pagination">
-            {pagination.currentPage > 1 && (
-              <li className="page-item">
-                <Link className="page-link" to={`?page=${pagination.currentPage - 1}`}>
-                  Previous
-                </Link>
-              </li>
-            )}
-            {pagination.currentPage < pagination.totalPages && (
-              <li className="page-item">
-                <Link className="page-link" to={`?page=${pagination.currentPage + 1}`}>
-                  Next
-                </Link>
-              </li>
-            )}
-          </ul>
-        </div>
-      )}
     </div>
   );
 };

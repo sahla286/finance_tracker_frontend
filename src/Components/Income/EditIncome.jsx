@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import axiosInstance from "../../services/axiosInstance";
 
-const EditIncome = ({ sources = [], getIncomeById, updateIncome, deleteIncome }) => {
+const EditIncome = () => {
   const { id } = useParams(); // Get the income ID from URL
   const navigate = useNavigate();
 
@@ -10,24 +11,41 @@ const EditIncome = ({ sources = [], getIncomeById, updateIncome, deleteIncome })
     amount: "",
     description: "",
     source: "",
-    income_date: "",
+    date: "",    
   });
+  const [sources, setSources] = useState([]);
+
+  // Fetch sources from backend
+  useEffect(() => {
+    const loadSources = async () => {
+      try {
+        const response = await axiosInstance.get("/income/sources/");
+        setSources(response.data);
+      } catch (error) {
+        console.error("Error fetching sources:", error);
+      }
+    };
+    loadSources();
+  }, []);
 
   // Fetch income details when component mounts
   useEffect(() => {
     const fetchIncome = async () => {
-      const income = await getIncomeById(id);
-      if (income) {
+      try {
+        const response = await axiosInstance.get(`/income/income/${id}/`);
+        const income = response.data;
         setFormData({
-          amount: income.amount || "",
-          description: income.description || "",
-          source: income.source || "",
-          income_date: income.income_date ? income.income_date.split("T")[0] : "",
+          amount: income.amount,
+          description: income.description,
+          source: income.source,
+          date: income.date,
         });
+      } catch (error) {
+        console.error("Error fetching income:", error);
       }
     };
     fetchIncome();
-  }, [id, getIncomeById]);
+  }, [id]);
 
   // Handle input change
   const handleChange = (e) => {
@@ -37,53 +55,35 @@ const EditIncome = ({ sources = [], getIncomeById, updateIncome, deleteIncome })
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await updateIncome(id, formData);
-    navigate("/income"); // Redirect after successful update
+    try {
+      await axiosInstance.put(`/income/income/${id}/`, formData);
+      alert("Income updated successfully!");
+      navigate("/income"); // Redirect after successful update
+    } catch (error) {
+      console.error("Error updating income:", error);
+      alert("Failed to update income");
+    }
   };
-
-  // Handle delete action
-//   const handleDelete = async () => {
-//     if (window.confirm("Are you sure you want to delete this income record?")) {
-//       await deleteIncome(id);
-//       navigate("/income");
-//     }
-//   };
 
   return (
     <div className="container mt-4">
-      {/* Breadcrumb Navigation */}
-      <div className="row">
-        <div className="col-md-12">
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb bg-light p-3 rounded">
-              <li className="breadcrumb-item">
-                <a href="/income">Income</a>
-              </li>
-              <li className="breadcrumb-item active" aria-current="page">
-                Edit Income
-              </li>
-            </ol>
-          </nav>
+      <nav aria-label="breadcrumb">
+        <ol className="breadcrumb bg-light p-3 rounded">
+          <li className="breadcrumb-item">
+            <a href="/income">Income</a>
+          </li>
+          <li className="breadcrumb-item active" aria-current="page">
+            Edit Income
+          </li>
+        </ol>
+      </nav>
 
-
-        </div>
-        {/* <div className="col-md-2 text-end">
-          <button className="btn btn-danger btn-sm" onClick={handleDelete}>
-            Delete
-          </button>
-        </div> */}
-      </div>
-
-      {/* Edit Income Form */}
       <div className="row justify-content-center">
         <div className="col-md-6">
           <div className="card shadow-sm">
-            {/* <div className="card-header bg-primary text-white text-center">
-              <h5 className="mb-0">Edit Income</h5>
-            </div> */}
             <div className="card-body">
+              <h4 className="mb-3 text-center">Edit Income</h4>
               <form onSubmit={handleSubmit}>
-                {/* Amount Input */}
                 <div className="mb-3">
                   <label className="form-label">Amount</label>
                   <input
@@ -96,11 +96,9 @@ const EditIncome = ({ sources = [], getIncomeById, updateIncome, deleteIncome })
                   />
                 </div>
 
-                {/* Description Input */}
                 <div className="mb-3">
                   <label className="form-label">Description</label>
-                  <input
-                    type="text"
+                  <textarea
                     className="form-control"
                     name="description"
                     value={formData.description}
@@ -109,7 +107,6 @@ const EditIncome = ({ sources = [], getIncomeById, updateIncome, deleteIncome })
                   />
                 </div>
 
-                {/* Source Dropdown */}
                 <div className="mb-3">
                   <label className="form-label">Source</label>
                   <select
@@ -120,28 +117,26 @@ const EditIncome = ({ sources = [], getIncomeById, updateIncome, deleteIncome })
                     required
                   >
                     <option value="">Select a source</option>
-                    {sources.map((source, index) => (
-                      <option key={index} value={source.name}>
+                    {sources.map((source) => (
+                      <option key={source.id} value={source.id}>
                         {source.name}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                {/* Date Picker */}
                 <div className="mb-3">
                   <label className="form-label">Date of Income</label>
                   <input
                     type="date"
                     className="form-control"
                     name="income_date"
-                    value={formData.income_date}
+                    value={formData.date}
                     onChange={handleChange}
                     required
                   />
                 </div>
 
-                {/* Save Button */}
                 <div className="text-center">
                   <button type="submit" className="btn btn-primary w-100">
                     Save Changes
@@ -150,13 +145,6 @@ const EditIncome = ({ sources = [], getIncomeById, updateIncome, deleteIncome })
               </form>
             </div>
           </div>
-
-          {/* Back to Income List Button */}
-          {/* <div className="text-center mt-3">
-            <a href="/income" className="btn btn-secondary">
-              Back to Income List
-            </a>
-          </div> */}
         </div>
       </div>
     </div>
