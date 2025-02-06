@@ -42,7 +42,7 @@ const Sidebar = () => {
         <div className="flex-grow-1">
           <ul className="nav flex-column">
             <li className="nav-item">
-              <Link className="nav-link active" to="/">
+              <Link className="nav-link active" to="/dashboard">
                 <Home size={16} className="me-2" />
                 Dashboard
               </Link>

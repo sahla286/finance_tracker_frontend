@@ -1,4 +1,3 @@
-
 import "./App.css";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -15,8 +14,9 @@ import AddIncome from "./Components/Income/AddIncome";
 import EditIncome from "./Components/Income/EditIncome"; 
 import IncomeChart from "./Components/Income/IncomeChart";
 import ExpenseStats from "./Components/Expenses/ExpenseStats";
-import Dashboard from "./Components/Sidebar/Dashboard";
+// import Dashboard from "./Components/Sidebar/Dashboard";
 import LandingPage from "./Components/LandingPage/LandingPage";
+import DashboardPage from "./Components/DashBoard/DashboardPage";
 
 function App() {
   const [sources, setSources] = useState([]);
@@ -55,7 +55,7 @@ function App() {
           <Route path="/request-reset-email" element={<ResetPassword />} />
           <Route path="/reset-password/:uidb64/:token" element={<CompletePasswordReset />} />
   
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/income" element={<IncomeList />} />
           <Route path="/income/add" element={<AddIncome sources={sources} />} />
           <Route path="/income/edit/:id" element={<EditIncome sources={sources} fetchIncomeById={fetchIncomeById} />} />

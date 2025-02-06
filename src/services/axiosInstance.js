@@ -50,12 +50,26 @@ const logoutUser = () => {
     window.location.href = "/login"; // Redirect to login page
 };
 
-// ✅ Refresh Token API
-export const refreshTokenApi = async () => {
-    try {
-        const refresh_token = localStorage.getItem("refresh_token");
-        const response = await axios.post(`${API_BASE_URL}/authentication/token/refresh/`, { refresh: refresh_token });
+// // ✅ Refresh Token API
+// export const refreshTokenApi = async () => {
+//     try {
+//         const refresh_token = localStorage.getItem("refresh_token");
+//         const response = await axios.post(`${API_BASE_URL}/authentication/token/refresh/`, { refresh: refresh_token });
 
+//         localStorage.setItem("access_token", response.data.access);
+//         return response.data;
+//     } catch (error) {
+//         console.error("Failed to refresh token:", error);
+//         logoutUser();
+//     }
+// };
+
+
+// Token Refresh API
+const refreshTokenApi = async () => {
+    const refresh_token = localStorage.getItem("refresh_token");
+    try {
+        const response = await axios.post(`${API_BASE_URL}/authentication/token/refresh/`, { refresh: refresh_token });
         localStorage.setItem("access_token", response.data.access);
         return response.data;
     } catch (error) {
