@@ -3,10 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../services/axiosInstance";
 
 const EditIncome = () => {
-  const { id } = useParams(); // Get the income ID from URL
+  const { id } = useParams(); 
   const navigate = useNavigate();
 
-  // State for form data
   const [formData, setFormData] = useState({
     amount: "",
     description: "",
@@ -15,7 +14,6 @@ const EditIncome = () => {
   });
   const [sources, setSources] = useState([]);
 
-  // Fetch sources from backend
   useEffect(() => {
     const loadSources = async () => {
       try {
@@ -28,7 +26,6 @@ const EditIncome = () => {
     loadSources();
   }, []);
 
-  // Fetch income details when component mounts
   useEffect(() => {
     const fetchIncome = async () => {
       try {
@@ -47,18 +44,16 @@ const EditIncome = () => {
     fetchIncome();
   }, [id]);
 
-  // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axiosInstance.put(`/income/income/${id}/`, formData);
       alert("Income updated successfully!");
-      navigate("/income"); // Redirect after successful update
+      navigate("/income"); 
     } catch (error) {
       console.error("Error updating income:", error);
       alert("Failed to update income");
@@ -66,7 +61,7 @@ const EditIncome = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container" style={{ marginTop: "80px" }}>
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb bg-light p-3 rounded">
           <li className="breadcrumb-item">

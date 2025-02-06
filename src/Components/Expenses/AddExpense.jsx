@@ -12,7 +12,6 @@ const AddExpense = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
 
-  // ✅ Fetch categories from backend
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -25,7 +24,6 @@ const AddExpense = () => {
     loadCategories();
   }, []);
 
-  // ✅ Handle form input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -33,7 +31,7 @@ const AddExpense = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Submitting Expense:", formData); // ✅ Debugging Log
+    console.log("Submitting Expense:", formData); 
 
     try {
         const response = await axiosInstance.post("/expense/expenses/", formData);
@@ -47,7 +45,7 @@ const AddExpense = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container" style={{ marginTop: "80px" }}>
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb bg-light p-3 rounded">
           <li className="breadcrumb-item"><a href="/expenses">Expenses</a></li>

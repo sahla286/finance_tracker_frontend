@@ -3,16 +3,15 @@ import { Doughnut, Bar, Pie, Line, Radar, PolarArea } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 import axiosInstance from "../../services/axiosInstance";
 
-Chart.register(...registerables); // Register Chart.js modules
+Chart.register(...registerables); 
 
 const IncomeChart = () => {
   const [chartData, setChartData] = useState(null);
   const [chartType, setChartType] = useState("doughnut");
-  const [timeRange, setTimeRange] = useState("1m"); // Default: Last 1 month
-
+  const [timeRange, setTimeRange] = useState("1m");
   useEffect(() => {
     fetchChartData();
-  }, [timeRange]); // Refetch data when time range changes
+  }, [timeRange]); 
 
   const fetchChartData = async () => {
     try {
@@ -82,7 +81,7 @@ const IncomeChart = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container" style={{ marginTop: "80px" }}>
       <div className="row">
         <div className="col-md-12">
         <nav aria-label="breadcrumb">

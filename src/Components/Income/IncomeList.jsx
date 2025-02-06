@@ -51,7 +51,7 @@ const IncomeList = () => {
   const displayedIncomes = searchTerm ? filteredIncomes : incomes;
 
   return (
-    <div className="container mt-4">
+    <div className="container" style={{ marginTop: "80px" }}>
       <div className="row">
         <div className="col-md-10 bg-light">
           <nav aria-label="breadcrumb">

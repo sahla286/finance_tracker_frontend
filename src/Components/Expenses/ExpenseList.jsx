@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../services/axiosInstance";
@@ -23,20 +21,6 @@ const ExpenseList = () => {
     }
   };
 
-  // const fetchExpenses = async () => {
-  //   const token = localStorage.getItem("token");
-  //   if (!token) {
-  //     setExpenses([]); // ✅ Clear expenses if user is logged out
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await axiosInstance.get("/expense/expenses/");
-  //     setExpenses(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching expenses:", error);
-  //   }
-  // };
 
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
@@ -46,7 +30,7 @@ const ExpenseList = () => {
       const results = expenses.filter(
         (expense) =>
           expense.description.toLowerCase().includes(value) ||
-          expense.category_name.toLowerCase().includes(value) // ✅ Search by category name
+          expense.category_name.toLowerCase().includes(value) 
       );
       setFilteredExpenses(results);
     } else {
@@ -68,7 +52,7 @@ const ExpenseList = () => {
   const displayedExpenses = searchTerm ? filteredExpenses : expenses;
 
   return (
-    <div className="container mt-4">
+    <div className="container" style={{ marginTop: "80px" }}>
       <div className="row">
         <div className="col-md-10 bg-light">
           <nav aria-label="breadcrumb">
@@ -112,7 +96,7 @@ const ExpenseList = () => {
             displayedExpenses.map((expense) => (
               <tr key={expense.id}>
                 <td>{expense.amount}</td>
-                <td>{expense.category_name}</td> {/* ✅ Display Category Name */}
+                <td>{expense.category_name}</td>
                 <td>{expense.description}</td>
                 <td>{expense.date}</td>
                 <td>

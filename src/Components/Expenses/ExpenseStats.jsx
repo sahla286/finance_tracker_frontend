@@ -8,11 +8,11 @@ Chart.register(...registerables);
 const ExpenseStats = () => {
   const [chartData, setChartData] = useState(null);
   const [chartType, setChartType] = useState("doughnut");
-  const [timeRange, setTimeRange] = useState("1m"); // Default: Last 1 month
+  const [timeRange, setTimeRange] = useState("1m"); 
 
   useEffect(() => {
     fetchChartData();
-  }, [timeRange]); // Refetch data when time range changes
+  }, [timeRange]);
 
   const fetchChartData = async () => {
     try {
@@ -68,13 +68,13 @@ const ExpenseStats = () => {
   const ChartComponent = chartComponents[chartType] || Doughnut;
 
   return (
-    <div className="container mt-4">
+    <div className="container" style={{ marginTop: "80px" }}>
       
       <div className="row">
         <div className="col-md-12">
         <nav aria-label="breadcrumb">
         <ol className="breadcrumb bg-light p-3 rounded">
-          <li className="breadcrumb-item"><a href="/expense">Expense Summary</a></li>
+          <li className="breadcrumb-item"><a href="/expenses">Expense Summary</a></li>
           <li className="breadcrumb-item active" aria-current="page">Summary</li>
         </ol>
       </nav>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { registrationApi } from '../../services/allapis';
+import { useNavigate } from 'react-router-dom';
 
 const Registration = () => {
   const [username, setUsername] = useState('');
@@ -7,19 +8,27 @@ const Registration = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    if (!username || !email || !password) {
+      setErrorMessage('Please fill in all fields.');
+      return;
+    }
+
     try {
       const data = { username, email, password };
       const response = await registrationApi(data);
 
       if (response.status === 201) {
-        setSuccessMessage(response.data.message); // Success message from the API response
+        setSuccessMessage(response.data.message);
+        setTimeout(() => navigate('/login'), 2000); 
       }
     } catch (error) {
-      console.error('Error:', error);
-      // Log the detailed error message from the backend
       setErrorMessage(error.response?.data?.message || 'Something went wrong, please try again later.');
     }
   };
@@ -27,65 +36,56 @@ const Registration = () => {
   return (
     <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
       <div className="col-md-4">
-        <div className="card mt-4">
+        <div className="card shadow p-4">
           <div className="card-body">
-            <div className="card-title py-2 text-center">
-              <h4>Register for a free account</h4>
-            </div>
+            <h4 className="text-center mb-3">Register for a free account</h4>
+            {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+            {successMessage && <div className="alert alert-success">{successMessage}</div>}
+            
             <form onSubmit={handleSubmit}>
-              <div className="form-group mb-2">
+              <div className="mb-3">
+                <label htmlFor="username" className="form-label">Username</label>
                 <input
                   type="text"
-                  name="username"
-                  placeholder="Username"
+                  id="username"
+                  className="form-control"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="form-control form-control-sm"
                 />
               </div>
 
-              <div className="form-group mb-2">
+              <div className="mb-3">
+                <label htmlFor="email" className="form-label">Email</label>
                 <input
                   type="email"
-                  name="email"
-                  placeholder="Email"
+                  id="email"
+                  className="form-control"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="form-control form-control-sm"
                 />
               </div>
 
-              <div className="form-group position-relative mb-2">
+              <div className="mb-3">
+                <label htmlFor="password" className="form-label">Password</label>
                 <input
                   type="password"
-                  name="password"
-                  placeholder="Password"
+                  id="password"
+                  className="form-control"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="form-control form-control-sm"
                 />
               </div>
 
-              <div className="d-grid">
-                <input
-                  type="submit"
-                  value="Register"
-                  className="btn btn-primary btn-block submit-btn"
-                />
-              </div>
+              <button type="submit" className="btn btn-primary w-100">Register</button>
             </form>
-            <div className="container">
-              <span className="text-lead lead">Have an account? </span>
-              <a href="/login">Login</a>
-              <br />
-              <span className="text-lead lead">Forgot Password? </span>
-              <a href="/request-reset-email">Reset it</a>
+
+            <div className="text-center mt-3">
+              <p>Already have an account? <a href="/login">Login</a></p>
+              <p><a href="/request-reset-email">Forgot Password?</a></p>
             </div>
           </div>
         </div>
       </div>
-      {errorMessage && <p>{errorMessage}</p>}
-      {successMessage && <p>{successMessage}</p>}
     </div>
   );
 };

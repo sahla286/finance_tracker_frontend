@@ -13,7 +13,6 @@ const AddIncome = () => {
   const navigate = useNavigate();
   const [sources, setSources] = useState([]);
 
-  // ✅ Fetch sources from backend
   useEffect(() => {
     const loadSources = async () => {
       try {
@@ -26,7 +25,6 @@ const AddIncome = () => {
     loadSources();
   }, []);
 
-  // ✅ Handle form input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -47,7 +45,7 @@ const AddIncome = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container" style={{ marginTop: "80px" }}>
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb bg-light p-3 rounded">
           <li className="breadcrumb-item"><a href="/income">Income</a></li>
