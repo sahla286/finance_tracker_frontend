@@ -19,26 +19,26 @@ import LandingPage from "./Components/LandingPage/LandingPage";
 import DashboardPage from "./Components/DashBoard/DashboardPage";
 
 function App() {
-  const [sources, setSources] = useState([]);
+  // const [sources, setSources] = useState([]);
   const location = useLocation(); 
 
-  useEffect(() => {
-    fetch("/income/sources")
-      .then((res) => res.json())
-      .then((data) => setSources(data.sources))
-      .catch((err) => console.error("Error fetching sources:", err));
-  }, []);
+  // useEffect(() => {
+  //   fetch("/income/sources")
+  //     .then((res) => res.json())
+  //     .then((data) => setSources(data.sources))
+  //     .catch((err) => console.error("Error fetching sources:", err));
+  // }, []);
 
-  const fetchIncomeById = async (id) => {
-    try {
-      const response = await fetch(`/income/income/${id}`);
-      const data = await response.json();
-      return data; 
-    } catch (error) {
-      console.error("Error fetching income:", error);
-      return null;
-    }
-  };
+  // const fetchIncomeById = async (id) => {
+  //   try {
+  //     const response = await fetch(`/income/income/${id}`);
+  //     const data = await response.json();
+  //     return data; 
+  //   } catch (error) {
+  //     console.error("Error fetching income:", error);
+  //     return null;
+  //   }
+  // };
 
   const hideSidebarRoutes = ["/", "/login", "/register", "/request-reset-email"];
   const showSidebar = !hideSidebarRoutes.includes(location.pathname);
@@ -57,8 +57,8 @@ function App() {
   
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/income" element={<IncomeList />} />
-          <Route path="/income/add" element={<AddIncome sources={sources} />} />
-          <Route path="/income/edit/:id" element={<EditIncome sources={sources} fetchIncomeById={fetchIncomeById} />} />
+          <Route path="/income/add" element={<AddIncome  />} />
+          <Route path="/income/edit/:id" element={<EditIncome  />} />
           <Route path="/income-chart" element={<IncomeChart />} />
   
           <Route path="/expenses" element={<ExpenseList />} />

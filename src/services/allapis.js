@@ -4,46 +4,46 @@ import base_url from "./base_url";
 import axios from "axios";
 
 // ✅ Create an Axios instance with default configurations
-const axiosInstance = axios.create({
-    baseURL: base_url,
-    headers: {
-        "Content-Type": "application/json",
-    },
-});
+// const axiosInstance = axios.create({
+//     baseURL: base_url,
+//     headers: {
+//         "Content-Type": "application/json",
+//     },
+// });
 
-// ✅ Interceptor to attach access token automatically
-axiosInstance.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem("access_token");
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => Promise.reject(error)
-);
+// // ✅ Interceptor to attach access token automatically
+// axiosInstance.interceptors.request.use(
+//     (config) => {
+//         const token = localStorage.getItem("access_token");
+//         if (token) {
+//             config.headers.Authorization = `Bearer ${token}`;
+//         }
+//         return config;
+//     },
+//     (error) => Promise.reject(error)
+// );
 
-// ✅ Interceptor to handle token expiration and refresh token
-axiosInstance.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-        const originalRequest = error.config;
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
-            try {
-                await refreshTokenApi();
-                originalRequest.headers.Authorization = `Bearer ${localStorage.getItem("access_token")}`;
-                return axiosInstance(originalRequest);
-            } catch (refreshError) {
-                logoutUser();
-                return Promise.reject(refreshError);
-            }
-        }
-        return Promise.reject(error);
-    }
-);
+// // ✅ Interceptor to handle token expiration and refresh token
+// axiosInstance.interceptors.response.use(
+//     (response) => response,
+//     async (error) => {
+//         const originalRequest = error.config;
+//         if (error.response?.status === 401 && !originalRequest._retry) {
+//             originalRequest._retry = true;
+//             try {
+//                 await refreshTokenApi();
+//                 originalRequest.headers.Authorization = `Bearer ${localStorage.getItem("access_token")}`;
+//                 return axiosInstance(originalRequest);
+//             } catch (refreshError) {
+//                 logoutUser();
+//                 return Promise.reject(refreshError);
+//             }
+//         }
+//         return Promise.reject(error);
+//     }
+// );
 
-export default axiosInstance;
+// export default axiosInstance;
 
 // ✅ Function to handle logout and clear storage
 const logoutUser = () => {
@@ -84,23 +84,60 @@ export const logoutApi = async () => {
 };
 
 // ✅ Token Refresh API
-export const refreshTokenApi = async () => {
-    try {
-        const refresh_token = localStorage.getItem("refresh_token");
-        const response = await axios.post(`${base_url}/authentication/token/refresh/`, { refresh: refresh_token });
+// export const refreshTokenApi = async () => {
+//     try {
+//         const refresh_token = localStorage.getItem("refresh_token");
+//         const response = await axios.post(`${base_url}/authentication/token/refresh/`, { refresh: refresh_token });
 
-        localStorage.setItem("access_token", response.data.access);
-        return response.data;
+//         localStorage.setItem("access_token", response.data.access);
+//         return response.data;
+//     } catch (error) {
+//         console.error("Failed to refresh token:", error);
+//         logoutUser();
+//     }
+// };
+
+
+export const refreshToken = async () => {
+    const refresh_token = localStorage.getItem("refresh_token");
+    if (!refresh_token) return;
+    try {
+        const response = await axios.post("http://127.0.0.1:8000/authentication/token/refresh/", { refresh: refresh_token });
+        localStorage.setItem("token", response.data.access);
     } catch (error) {
-        console.error("Failed to refresh token:", error);
-        logoutUser();
+        console.error("Refresh Token Error:", error);
+        localStorage.removeItem("token");
     }
 };
 
+
+
 // ✅ Registration API
-export const registrationApi = async (data) => {
-    return await axios.post(`${base_url}/authentication/register/`, data);
+// export const registrationApi = async (data) => {
+//     return await axios.post(`${base_url}/authentication/register/`, data);
+// };
+
+export const registrationApi = async (userData) => {
+    try {
+        const response = await fetch("http://127.0.0.1:8000/authentication/register/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userData),
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || "Registration failed");
+        }
+
+        console.log("Registration successful:", data);
+    } catch (error) {
+        console.error("Error:", error);
+    }
 };
+
 
 // ✅ Request Password Reset Email
 export const requestResetEmailApi = async (email) => {
