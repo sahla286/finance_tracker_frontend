@@ -1,59 +1,13 @@
-
-
 import base_url from "./base_url";
 import axios from "axios";
 
-// ✅ Create an Axios instance with default configurations
-// const axiosInstance = axios.create({
-//     baseURL: base_url,
-//     headers: {
-//         "Content-Type": "application/json",
-//     },
-// });
-
-// // ✅ Interceptor to attach access token automatically
-// axiosInstance.interceptors.request.use(
-//     (config) => {
-//         const token = localStorage.getItem("access_token");
-//         if (token) {
-//             config.headers.Authorization = `Bearer ${token}`;
-//         }
-//         return config;
-//     },
-//     (error) => Promise.reject(error)
-// );
-
-// // ✅ Interceptor to handle token expiration and refresh token
-// axiosInstance.interceptors.response.use(
-//     (response) => response,
-//     async (error) => {
-//         const originalRequest = error.config;
-//         if (error.response?.status === 401 && !originalRequest._retry) {
-//             originalRequest._retry = true;
-//             try {
-//                 await refreshTokenApi();
-//                 originalRequest.headers.Authorization = `Bearer ${localStorage.getItem("access_token")}`;
-//                 return axiosInstance(originalRequest);
-//             } catch (refreshError) {
-//                 logoutUser();
-//                 return Promise.reject(refreshError);
-//             }
-//         }
-//         return Promise.reject(error);
-//     }
-// );
-
-// export default axiosInstance;
-
-// ✅ Function to handle logout and clear storage
 const logoutUser = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("username");
-    window.location.href = "/login"; // Redirect to login page
+    window.location.href = "/login"; 
 };
 
-// ✅ Login API
 export const loginApi = async (data) => {
     try {
         const response = await axios.post(`${base_url}/authentication/login/`, data, {
@@ -62,7 +16,6 @@ export const loginApi = async (data) => {
             },
         });
 
-        // Store access and refresh tokens securely
         localStorage.setItem("access_token", response.data.access_token);
         localStorage.setItem("refresh_token", response.data.refresh_token);
         localStorage.setItem("username", response.data.username);
@@ -73,29 +26,15 @@ export const loginApi = async (data) => {
     }
 };
 
-// ✅ Logout API
+
 export const logoutApi = async () => {
     try {
         await axios.post(`${base_url}/authentication/logout/`);
-        logoutUser(); // Clear storage & redirect
+        logoutUser(); 
     } catch (error) {
         throw error.response ? error.response.data : "Something went wrong";
     }
 };
-
-// ✅ Token Refresh API
-// export const refreshTokenApi = async () => {
-//     try {
-//         const refresh_token = localStorage.getItem("refresh_token");
-//         const response = await axios.post(`${base_url}/authentication/token/refresh/`, { refresh: refresh_token });
-
-//         localStorage.setItem("access_token", response.data.access);
-//         return response.data;
-//     } catch (error) {
-//         console.error("Failed to refresh token:", error);
-//         logoutUser();
-//     }
-// };
 
 
 export const refreshToken = async () => {
@@ -111,12 +50,6 @@ export const refreshToken = async () => {
 };
 
 
-
-// ✅ Registration API
-// export const registrationApi = async (data) => {
-//     return await axios.post(`${base_url}/authentication/register/`, data);
-// };
-
 export const registrationApi = async (userData) => {
     try {
         const response = await fetch("http://127.0.0.1:8000/authentication/register/", {
@@ -127,19 +60,21 @@ export const registrationApi = async (userData) => {
             body: JSON.stringify(userData),
         });
 
-        const data = await response.json();
         if (!response.ok) {
-            throw new Error(data.message || "Registration failed");
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Registration failed");
         }
 
+        const data = await response.json();
         console.log("Registration successful:", data);
+        return { status: response.status, data }; 
     } catch (error) {
         console.error("Error:", error);
+        throw error; 
     }
 };
 
 
-// ✅ Request Password Reset Email
 export const requestResetEmailApi = async (email) => {
     try {
         const response = await axios.post(`${base_url}/authentication/request-reset-email/`, { email });
@@ -149,7 +84,6 @@ export const requestResetEmailApi = async (email) => {
     }
 };
 
-// ✅ Complete Password Reset
 export const completePasswordResetApi = async (uidb64, token, password, password2) => {
     try {
         const response = await axios.post(`${base_url}/authentication/reset-password/${uidb64}/${token}/`, { password, password2 });
@@ -159,7 +93,6 @@ export const completePasswordResetApi = async (uidb64, token, password, password
     }
 };
 
-// ✅ Fetch Categories with Authentication
 export const fetchCategories = async () => {
     try {
         const response = await axiosInstance.get(`/expense/categories/`);
@@ -169,7 +102,6 @@ export const fetchCategories = async () => {
     }
 };
 
-// ✅ Add New Expense
 export const addExpense = async (data) => {
     try {
         const response = await axiosInstance.post(`/expense/expenses/`, data);

@@ -10,28 +10,38 @@ const Registration = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
     setSuccessMessage('');
-
+  
     if (!username || !email || !password) {
       setErrorMessage('Please fill in all fields.');
       return;
     }
-
+  
     try {
       const data = { username, email, password };
       const response = await registrationApi(data);
-
+  
       if (response.status === 201) {
-        setSuccessMessage(response.data.message);
-        setTimeout(() => navigate('/login'), 2000); 
+        setSuccessMessage(response.data.message || "Account created successfully. Check your email for activation.");
+        setTimeout(() => navigate('/login'), 3000);
+      } else {
+        setErrorMessage(response.data?.message || "Something went wrong, please try again.");
       }
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || 'Something went wrong, please try again later.');
+      console.error("Registration error:", error);
+  
+      if (error.response) {
+        setErrorMessage(error.response.data?.message || "Something went wrong, please try again.");
+      } else {
+        setErrorMessage("Network error. Please check your internet connection.");
+      }
     }
   };
+  
 
   return (
     <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>

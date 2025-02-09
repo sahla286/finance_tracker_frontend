@@ -24,7 +24,7 @@ const Login = () => {
         try {
             const response = await loginApi(data);
             setSuccessMessage(response.message);
-            setTimeout(() => navigate('/expenses'), 2000);
+            setTimeout(() => navigate('/dashboard'), 2000);
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 setErrorMessage(error.response.data?.detail || "Invalid credentials. Please try again.");

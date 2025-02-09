@@ -79,17 +79,7 @@ const EditIncome = () => {
             <div className="card-body">
               <h4 className="mb-3 text-center">Edit Income</h4>
               <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label className="form-label">Amount</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    name="amount"
-                    value={formData.amount}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+      
 
                 <div className="mb-3">
                   <label className="form-label">Description</label>
@@ -119,7 +109,17 @@ const EditIncome = () => {
                     ))}
                   </select>
                 </div>
-
+                <div className="mb-3">
+                  <label className="form-label">Amount</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    name="amount"
+                    value={formData.amount}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
                 <div className="mb-3">
                   <label className="form-label">Date of Income</label>
                   <input

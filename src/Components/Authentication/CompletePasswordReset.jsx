@@ -21,7 +21,7 @@ const CompletePasswordReset = () => {
         }
       })
       .catch(() => {
-        setError("Invalid or expired token.");
+        // setError("Invalid or expired token.");
       });
   }, [uidb64, token]);
 

@@ -1,0 +1,41 @@
+.navbar {
+    height: 60px; 
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  
+ 
+
+  
+  .sidebar {
+    width: 250px; 
+    background-color: #f8f9fa; 
+    padding: 20px;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto; 
+  }
+
+.sidebar {
+  width: 250px; 
+  background-color: #f8f9fa;
+  padding: 20px;
+  height: 100vh;
+  overflow-y: auto;
+  transition: all 0.3s ease-in-out;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.no-sidebar .sidebar {
+  display: none;
+}
+
+.no-sidebar .main-content {
+  margin-left: 0 !important;
+  width: 100%;
+} 

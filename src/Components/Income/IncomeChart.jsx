@@ -8,10 +8,10 @@ Chart.register(...registerables);
 
 const IncomeChart = () => {
   const [chartData, setChartData] = useState(null);
-  const [chartType, setChartType] = useState("doughnut"); // Default to Doughnut
-  const [month, setMonth] = useState(new Date().getMonth() + 1); // Default to current month
-  const [year, setYear] = useState(new Date().getFullYear()); // Default to current year
-  const [timeRange, setTimeRange] = useState(""); // Default no range selected
+  const [chartType, setChartType] = useState("doughnut");
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [timeRange, setTimeRange] = useState(""); 
 
   useEffect(() => {
     fetchChartData();

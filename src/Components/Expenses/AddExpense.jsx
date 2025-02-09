@@ -59,10 +59,7 @@ const AddExpense = () => {
             <div className="card-body">
               <h4 className="mb-3 text-center">Add New Expense</h4>
               <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label className="form-label" >Amount</label>
-                  <input type="number" placeholder="Enter Amount" className="form-control" name="amount" value={formData.amount} onChange={handleChange} required />
-                </div>
+            
 
                 <div className="mb-3">
                   <label className="form-label">Description</label>
@@ -82,7 +79,10 @@ const AddExpense = () => {
                     )}
                   </select>
                 </div>
-
+                <div className="mb-3">
+                  <label className="form-label" >Amount</label>
+                  <input type="number" placeholder="Enter Amount" className="form-control" name="amount" value={formData.amount} onChange={handleChange} required />
+                </div>
                 <div className="mb-3">
                   <label className="form-label">Date of Expense</label>
                   <input type="date" className="form-control" name="date" value={formData.date} onChange={handleChange} required />

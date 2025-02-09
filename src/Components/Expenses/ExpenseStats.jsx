@@ -1,285 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import axiosInstance from "../../services/axiosInstance";
-// import { Chart, registerables } from "chart.js";
-// import { Doughnut, Bar, Pie, Line, Radar, PolarArea } from "react-chartjs-2";
-
-// Chart.register(...registerables);
-
-// const ExpenseStats = () => {
-//   const [chartData, setChartData] = useState(null);
-//   const [chartType, setChartType] = useState("doughnut");
-//   const [timeRange, setTimeRange] = useState("1m"); 
-
-//   useEffect(() => {
-//     fetchChartData();
-//   }, [timeRange]);
-
-//   const fetchChartData = async () => {
-//     try {
-//       const response = await axiosInstance.get(`expense/expense_category_summary/?time_range=${timeRange}`);
-//       const categoryData = response.data.expense_category_data;
-
-//       if (!categoryData || Object.keys(categoryData).length === 0) {
-//         console.error("No expense data available.");
-//         setChartData(null);
-//         return;
-//       }
-
-//       setChartData({
-//         labels: Object.keys(categoryData),
-//         datasets: [
-//           {
-//             label: `Expenses (${timeRange === '1m' ? 'Last 1 Month' : timeRange === '6m' ? 'Last 6 Months' : 'Last 1 Year'})`,
-//             data: Object.values(categoryData),
-//             backgroundColor: [
-     
-//               "rgb(251, 29, 77)",
-//               "rgb(36, 129, 192)",
-//               "rgb(199, 145, 8)",
-//               "rgb(60, 152, 152)",
-//               "rgb(139, 84, 249)",
-//               "rgb(237, 149, 61)",
-//             ],
-//             borderColor: [
-//               "rgb(251, 29, 77)",
-//               "rgb(36, 129, 192)",
-//               "rgb(199, 145, 8)",
-//               "rgb(60, 152, 152)",
-//               "rgb(139, 84, 249)",
-//               "rgb(237, 149, 61)",
-//             ],
-//             borderWidth: 1,
-//           },
-//         ],
-//       });
-//     } catch (error) {
-//       console.error("Error fetching chart data:", error);
-//     }
-//   };
-
-//   const chartComponents = {
-//     doughnut: Doughnut,
-//     bar: Bar,
-//     pie: Pie,
-//     line: Line,
-//     radar: Radar,
-//     polarArea: PolarArea,
-//   };
-
-//   const ChartComponent = chartComponents[chartType] || Doughnut;
-
-//   return (
-//     <div className="container" style={{ marginTop: "80px" }}>
-      
-//       <div className="row">
-//         <div className="col-md-12">
-//         <nav aria-label="breadcrumb">
-//         <ol className="breadcrumb bg-light p-3 rounded">
-//           <li className="breadcrumb-item"><a href="/expenses">Expense Summary</a></li>
-//           <li className="breadcrumb-item active" aria-current="page">Summary</li>
-//         </ol>
-//       </nav>
-//         </div>
-//       </div>
-
-//       <div className="row mt-5">
-//         <div className="col-md-4">
-//           <h5>Select Time Range</h5>
-//           <select
-//             className="form-control mt-2"
-//             value={timeRange}
-//             onChange={(e) => setTimeRange(e.target.value)}
-//           >
-//             <option value="1m">Last 1 Month</option>
-//             <option value="6m">Last 6 Months</option>
-//             <option value="1y">Last 1 Year</option>
-//           </select>
-
-//           <h5 className="mt-3">Select Chart Type</h5>
-//           <select
-//             className="form-control mt-2"
-//             value={chartType}
-//             onChange={(e) => setChartType(e.target.value)}
-//           >
-//             <option value="bar">Bar</option>
-//             <option value="pie">Pie</option>
-//             <option value="line">Line</option>
-//             <option value="radar">Radar</option>
-//             <option value="doughnut">Doughnut</option>
-//             <option value="polarArea">Polar Area</option>
-//           </select>
-//         </div>
-
-//         <div className="col-md-8">
-//           <div style={{ height: "300px", width: "100%" }}>
-//             {chartData ? (
-//               <ChartComponent 
-//                 data={chartData} 
-//                 options={{ responsive: true, maintainAspectRatio: false }} 
-//               />
-//             ) : (
-//               <p>Loading chart...</p>
-//             )}
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ExpenseStats;
-
-
-
-// import React, { useEffect, useState } from "react";
-// import axiosInstance from "../../services/axiosInstance";
-// import { Chart, registerables } from "chart.js";
-// import { Doughnut, Bar, Pie, Line, Radar, PolarArea } from "react-chartjs-2";
-
-// Chart.register(...registerables);
-
-// const ExpenseStats = () => {
-//   const [chartData, setChartData] = useState(null);
-//   const [chartType, setChartType] = useState("bar"); // Default is Bar Chart
-//   const [timeRange, setTimeRange] = useState("1m");
-
-//   useEffect(() => {
-//     fetchChartData();
-//   }, [timeRange]);
-
-//   const fetchChartData = async () => {
-//     try {
-//       const response = await axiosInstance.get(`expense/expense_category_summary/?time_range=${timeRange}`);
-//       const categoryData = response.data.expense_category_data;
-
-//       if (!categoryData || Object.keys(categoryData).length === 0) {
-//         console.error("No expense data available.");
-//         setChartData(null);
-//         return;
-//       }
-
-//       setChartData({
-//         labels: Object.keys(categoryData), // Expense Categories
-//         datasets: [
-//           {
-//             label: `Expenses (${timeRange === '1m' ? 'Last 1 Month' : timeRange === '6m' ? 'Last 6 Months' : 'Last 1 Year'})`,
-//             data: Object.values(categoryData), // Expense Values
-//             backgroundColor: [
-//               "rgb(251, 29, 77)", // Red
-//               "rgb(36, 129, 192)", // Blue (Salary)
-//               "rgb(199, 145, 8)", // Yellow
-//               "rgb(60, 152, 152)", // Teal
-//               "rgb(139, 84, 249)", // Purple
-//               "rgb(237, 149, 61)", // Orange
-//             ],
-//             borderColor: [
-//               "rgb(251, 29, 77)",
-//               "rgb(36, 129, 192)",
-//               "rgb(199, 145, 8)",
-//               "rgb(60, 152, 152)",
-//               "rgb(139, 84, 249)",
-//               "rgb(237, 149, 61)",
-//             ],
-//             borderWidth: 1,
-//           },
-//         ],
-//       });
-//     } catch (error) {
-//       console.error("Error fetching chart data:", error);
-//     }
-//   };
-
-//   const chartComponents = {
-//     doughnut: Doughnut,
-//     bar: Bar,
-//     pie: Pie,
-//     line: Line,
-//     radar: Radar,
-//     polarArea: PolarArea,
-//   };
-
-//   const ChartComponent = chartComponents[chartType] || Bar;
-
-//   return (
-//     <div className="container" style={{ marginTop: "80px" }}>
-//       <div className="row">
-//         <div className="col-md-12">
-//           <nav aria-label="breadcrumb">
-//             <ol className="breadcrumb bg-light p-3 rounded">
-//               <li className="breadcrumb-item"><a href="/expenses">Expense Summary</a></li>
-//               <li className="breadcrumb-item active" aria-current="page">Summary</li>
-//             </ol>
-//           </nav>
-//         </div>
-//       </div>
-
-//       <div className="row mt-5">
-//         <div className="col-md-4">
-//           <h5>Select Time Range</h5>
-//           <select
-//             className="form-control mt-2"
-//             value={timeRange}
-//             onChange={(e) => setTimeRange(e.target.value)}
-//           >
-//             <option value="1m">Last 1 Month</option>
-//             <option value="6m">Last 6 Months</option>
-//             <option value="1y">Last 1 Year</option>
-//           </select>
-
-//           <h5 className="mt-3">Select Chart Type</h5>
-//           <select
-//             className="form-control mt-2"
-//             value={chartType}
-//             onChange={(e) => setChartType(e.target.value)}
-//           >
-//             <option value="bar">Bar</option>
-//             <option value="pie">Pie</option>
-//             <option value="line">Line</option>
-//             <option value="radar">Radar</option>
-//             <option value="doughnut">Doughnut</option>
-//             <option value="polarArea">Polar Area</option>
-//           </select>
-//         </div>
-
-//         <div className="col-md-8">
-//           <div style={{ height: "300px", width: "100%" }}>
-//             {chartData ? (
-//               <ChartComponent
-//                 data={chartData}
-//                 options={{
-//                   responsive: true,
-//                   maintainAspectRatio: false,
-//                   plugins: {
-//                     legend: {
-//                       position: "right", // Legends on right
-//                       labels: {
-//                         boxWidth: 20, // Make color boxes smaller
-//                       },
-//                     },
-//                   },
-//                   scales: chartType === "bar" ? {
-//                     x: {
-//                       ticks: {
-//                         autoSkip: false,
-//                         maxRotation: 90, // Rotate x-axis labels
-//                         minRotation: 90,
-//                       },
-//                     },
-//                   } : {}, // Apply rotation only for bar chart
-//                 }}
-//               />
-//             ) : (
-//               <p>Loading chart...</p>
-//             )}
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ExpenseStats;
-
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../services/axiosInstance";
 import { Chart, registerables } from "chart.js";
@@ -289,10 +7,10 @@ Chart.register(...registerables);
 
 const ExpenseStats = () => {
   const [chartData, setChartData] = useState(null);
-  const [chartType, setChartType] = useState("doughnut"); // Default to Doughnut
-  const [month, setMonth] = useState(new Date().getMonth() + 1); // Default to current month
-  const [year, setYear] = useState(new Date().getFullYear()); // Default to current year
-  const [timeRange, setTimeRange] = useState(""); // Default no range selected
+  const [chartType, setChartType] = useState("doughnut"); 
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getFullYear()); 
+  const [timeRange, setTimeRange] = useState(""); 
 
   useEffect(() => {
     fetchChartData();
@@ -447,9 +165,9 @@ const ExpenseStats = () => {
                   maintainAspectRatio: false,
                   plugins: {
                     legend: {
-                      position: "right", // Legends on right
+                      position: "right", 
                       labels: {
-                        boxWidth: 20, // Make color boxes smaller
+                        boxWidth: 20, 
                       },
                     },
                   },
@@ -457,11 +175,11 @@ const ExpenseStats = () => {
                     x: {
                       ticks: {
                         autoSkip: false,
-                        maxRotation: 90, // Rotate x-axis labels
+                        maxRotation: 90, 
                         minRotation: 90,
                       },
                     },
-                  } : {}, // Apply rotation only for bar chart
+                  } : {}, 
                 }}
               />
             ) : (

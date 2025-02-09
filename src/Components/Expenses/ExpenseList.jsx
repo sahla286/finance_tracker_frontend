@@ -84,10 +84,10 @@ const ExpenseList = () => {
       <table className="table table-striped table-hover">
         <thead>
           <tr>
-            <th>Amount ({currency})</th>
             <th>Category</th>
             <th>Description</th>
             <th>Date</th>
+            <th>Amount</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -95,10 +95,11 @@ const ExpenseList = () => {
           {displayedExpenses.length > 0 ? (
             displayedExpenses.map((expense) => (
               <tr key={expense.id}>
-                <td>{expense.amount}</td>
+                
                 <td>{expense.category_name}</td>
                 <td>{expense.description}</td>
                 <td>{expense.date}</td>
+                <td>{expense.amount}</td>
                 <td>
                   <Link to={`/expenses/edit/${expense.id}`} className="btn btn-secondary btn-sm me-2">Edit</Link>
                   <button className="btn btn-danger btn-sm" onClick={() => handleDelete(expense.id)}>Delete</button>

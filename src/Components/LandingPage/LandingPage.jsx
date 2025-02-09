@@ -31,11 +31,11 @@ const LandingPage = () => {
                   Login
                 </Link>
               </li>
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link className="btn btn-outline-primary px-4" to="/register">
                   Sign Up
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
@@ -102,3 +102,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+

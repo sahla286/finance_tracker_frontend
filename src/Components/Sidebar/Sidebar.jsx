@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Home } from "react-feather";
+import "./Sidebar.css";
 
 const Sidebar = () => {
   const [username, setUsername] = useState(""); 
@@ -38,12 +38,12 @@ const Sidebar = () => {
         </div>
       </nav>
 
-      <div className="d-flex" style={{ marginTop: "56px", width: "250px", height: "100vh", position: "fixed", background: "#f8f9fa", padding: "10px" }}>
+      <div className="d-flex" style={{ marginTop: "60px", width: "250px", height: "100vh", position: "fixed", background: "#f8f9fa", padding: "10px" }}>
         <div className="flex-grow-1">
           <ul className="nav flex-column">
             <li className="nav-item">
               <Link className="nav-link active" to="/dashboard">
-                <Home size={16} className="me-2" />
+              
                 Dashboard
               </Link>
             </li>
@@ -67,17 +67,17 @@ const Sidebar = () => {
             </li>
           </ul>
 
-          <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          {/* <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             <span>Settings</span>
-          </h6>
-          <ul className="nav flex-column mb-2">
+          </h6> */}
+          {/* <ul className="nav flex-column mb-2">
             <li className="nav-item">
               <Link className="nav-link" to="/preferences">General</Link>
             </li>
-            {/* <li className="nav-item">
+            <li className="nav-item">
               <Link className="nav-link" to="#">Account</Link>
-            </li> */}
-          </ul>
+            </li>
+          </ul> */}
         </div>
       </div>
     </div>
